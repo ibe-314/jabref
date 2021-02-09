@@ -46,13 +46,14 @@ class ZbMATHTest {
         donaldsonEntry.setField(StandardField.TITLE, "An application of gauge theory to four dimensional topology");
         donaldsonEntry.setField(StandardField.VOLUME, "18");
         donaldsonEntry.setField(StandardField.YEAR, "1983");
-        donaldsonEntry.setField(new UnknownField("zbl"), "0507.57010");
+        donaldsonEntry.setField(StandardField.ZBL_NUMBER, "0507.57010");
     }
 
     @Test
     void searchByQueryFindsEntry() throws Exception {
         List<BibEntry> fetchedEntries = fetcher.performSearch("an:0507.57010");
         assertEquals(donaldsonEntry.getFieldsObservable(),fetchedEntries.get(0).getFieldsObservable());
+        assertEquals(donaldsonEntry, fetchedEntries.get(0));
     }
 
     @Test
@@ -60,9 +61,9 @@ class ZbMATHTest {
         Optional<BibEntry> fetchedEntry = fetcher.performSearchById("0507.57010");
         BibEntry other = new BibEntry();
         BibEntry fetchedBib = fetchedEntry.orElse(other);
-        //assertEquals(Optional.of(donaldsonEntry), fetchedEntry); // this worked in the beginning of January
         //assertTrue(fetchedBib.equals(donaldsonEntry));
         assertEquals(fetchedBib, donaldsonEntry);
+        assertEquals(Optional.of(donaldsonEntry), fetchedEntry); // this worked in the beginning of January
     }
 
     @Test
@@ -72,7 +73,7 @@ class ZbMATHTest {
         searchEntry.setField(StandardField.AUTHOR, "S. K. {Donaldson}");
 
         List<BibEntry> fetchedEntries = fetcher.performSearch(searchEntry);
-        //assertEquals(donaldsonEntry, fetchedEntries.get(0));
+        assertEquals(donaldsonEntry, fetchedEntries.get(0));
         //assertTrue(donaldsonEntry.equals(fetchedEntries.get(0)));
         assertTrue(fetchedEntries.size() == 1);
 
